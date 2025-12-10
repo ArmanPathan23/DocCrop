@@ -1,0 +1,39 @@
+/* Theme variables */
+:root {
+  --bg: #f7fff7;
+  --text: #12351a;
+  --muted: #557a63;
+  --primary: #2e7d32;
+  --primary-contrast: #ffffff;
+  --card: #ffffff;
+  --border: #e3efe6;
+  --shadow: 0 6px 20px rgba(0,0,0,0.07);
+}
+
+[data-theme="dark"] {
+  --bg: #0e1511;
+  --text: #e8f5ec;
+  --muted: #a9cbb3;
+  --primary: #5fd27a;
+  --primary-contrast: #0e1511;
+  --card: #121c16;
+  --border: #203327;
+  --shadow: 0 6px 24px rgba(0,0,0,0.35);
+}
+
+/* Base styling */
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--text); }
+a { color: var(--primary); }
+header { box-shadow: 0 1px 2px rgba(0,0,0,0.05); background: var(--primary); }
+.btn { background: var(--primary); color: var(--primary-contrast); padding:8px 12px; border-radius:8px; border:0; cursor:pointer; }
+
+/* Cards and layout */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: var(--shadow); }
+.card h3 { margin: 0 0 6px 0; color: var(--primary); }
+.muted { color: var(--muted); }
+.input, input, select, textarea { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; }
+table { background: var(--card); border: 1px solid var(--border); }
+th, td { border-color: var(--border); }
+
+

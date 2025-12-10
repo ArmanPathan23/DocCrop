@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disease Detection - Smart AgriAssist</title>
+  <style>
+    body { font-family: system-ui, Arial; margin:16px; }
+    button { background:#2e7d32; color:#fff; border:0; padding:8px 12px; border-radius:6px; cursor:pointer; }
+    input[type=file] { padding:6px; }
+    pre { background:#fafafa; border:1px solid #eee; padding:12px; }
+  </style>
+</head>
+<body>
+  <p><a href="{{ url_for('index') }}">← Back</a></p>
+  <h2>Disease Detection (Mock)</h2>
+  <input id="image" type="file" accept="image/*" />
+  <button onclick="analyze()">Analyze</button>
+  <pre id="out"></pre>
+
+  <script>
+    async function analyze() {
+      const file = document.getElementById('image').files[0];
+      if (!file) { alert('Choose an image'); return; }
+      const fd = new FormData();
+      fd.append('image', file);
+      const res = await fetch('/api/disease', { method:'POST', body: fd });
+      const data = await res.json();
+      document.getElementById('out').textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,6 @@
+Flask>=3.0.0
+requests>=2.31.0
+googletrans==4.0.0rc1
+gTTS>=2.5.1
+pymongo>=4.8.0
+Pillow>=10.4.0

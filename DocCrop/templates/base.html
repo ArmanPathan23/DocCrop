@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Smart AgriAssist{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body { font-family: system-ui, Arial; margin:0; }
+    header { background:#2e7d32; color:#fff; padding:12px 16px; position:sticky; top:0; }
+    nav a { color:#fff; margin-right:12px; text-decoration:none; }
+    main { padding:16px; }
+    .container { max-width:1100px; margin:0 auto; }
+  </style>
+</head>
+<body data-theme="light">
+  <header>
+    <div class="container">
+      <strong><a href="{{ url_for('index') }}" style="color:#fff; text-decoration:none;">Smart AgriAssist</a></strong>
+      <nav style="margin-top:8px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <a href="{{ url_for('translator_page') }}">Translator</a>
+        <a href="{{ url_for('weather_page') }}">Weather</a>
+        <a href="{{ url_for('market_page') }}">Market</a>
+        <a href="{{ url_for('schemes_page') }}">Schemes</a>
+        <a href="{{ url_for('expenses_page') }}">Expenses</a>
+        <a href="{{ url_for('disease_page') }}">Disease</a>
+        <a href="{{ url_for('scheduler_page') }}">Scheduler</a>
+        <span style="flex:1"></span>
+        <button id="themeToggle" class="btn" type="button">Toggle Theme</button>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <script>
+    (function themeInit(){
+      const saved = localStorage.getItem('saa-theme');
+      if (saved) document.body.setAttribute('data-theme', saved);
+      const btn = document.getElementById('themeToggle');
+      if (btn) {
+        btn.addEventListener('click', () => {
+          const next = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          document.body.setAttribute('data-theme', next);
+          localStorage.setItem('saa-theme', next);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
+
+

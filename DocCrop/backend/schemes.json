@@ -1,0 +1,27 @@
+{
+  "schemes": [
+    {
+      "title": "PM-Kisan Income Support",
+      "state": "maharashtra",
+      "district": "pune",
+      "benefit": "Rs. 6000 per year to eligible farmers",
+      "link": "https://pmkisan.gov.in/"
+    },
+    {
+      "title": "Crop Insurance Yojana",
+      "state": "maharashtra",
+      "district": "nagpur",
+      "benefit": "Insurance coverage against crop failure",
+      "link": "https://pmfby.gov.in/"
+    },
+    {
+      "title": "Soil Health Card",
+      "state": "karnataka",
+      "district": "belagavi",
+      "benefit": "Soil testing and nutrient advice",
+      "link": "https://soilhealth.dac.gov.in/"
+    }
+  ]
+}
+
+

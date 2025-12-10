@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}Expenses - Smart AgriAssist{% endblock %}
+{% block content %}
+  <style>
+    input, select { padding:6px; }
+    button { background:#2e7d32; color:#fff; border:0; padding:8px 12px; border-radius:6px; cursor:pointer; }
+    table { width:100%; border-collapse: collapse; margin-top:12px; }
+    th, td { border:1px solid #e0e0e0; padding:8px; }
+    th { background:#f5f5f5; }
+    .summary { margin-top:12px; }
+    canvas { max-width: 700px; }
+  </style>
+  <h2>Expense Tracker</h2>
+
+  <div>
+    <input id="date" type="date" />
+    <select id="type">
+      <option value="expense">Expense</option>
+      <option value="income">Income</option>
+    </select>
+    <input id="category" placeholder="Category" />
+    <input id="amount" type="number" step="0.01" placeholder="Amount" />
+    <input id="note" placeholder="Note" />
+    <button onclick="addEntry()">Add</button>
+  </div>
+
+  <div class="summary">
+    <strong>Total Income:</strong> Rs. {{ '%.2f' % total_income }}
+    &nbsp; | &nbsp;
+    <strong>Total Expense:</strong> Rs. {{ '%.2f' % total_expense }}
+    &nbsp; | &nbsp;
+    <strong>Profit:</strong> Rs. {{ '%.2f' % profit }}
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Note</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      {% for r in rows %}
+      <tr>
+        <td>{{ r['date'] if r['date'] else r.get('date') }}</td>
+        <td>{{ r['type'] if r['type'] else r.get('type') }}</td>
+        <td>{{ r['category'] if r['category'] else r.get('category') }}</td>
+        <td>{{ '%.2f' % (r['amount'] if r['amount'] else r.get('amount', 0)) }}</td>
+        <td>{{ r['note'] if r['note'] else r.get('note', '') }}</td>
+        <td>
+          {% set rid = r['id'] if r['id'] else r.get('id', r.get('_id')) %}
+          <button onclick="delEntry('{{ rid }}')">Delete</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h3>Summary by Category</h3>
+  <canvas id="chart"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    async function addEntry() {
+      const payload = {
+        date: document.getElementById('date').value,
+        type: document.getElementById('type').value,
+        category: document.getElementById('category').value,
+        amount: parseFloat(document.getElementById('amount').value || '0'),
+        note: document.getElementById('note').value,
+      };
+      const res = await fetch('/api/expenses', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(payload) });
+      if (res.ok) location.reload();
+    }
+    async function delEntry(id) {
+      const res = await fetch('/api/expenses/' + encodeURIComponent(id), { method: 'DELETE' });
+      if (res.ok) location.reload();
+    }
+    // Build chart data from existing rows in template context
+    (function buildChart() {
+      const rows = Array.from(document.querySelectorAll('#tbody tr'));
+      const totals = {};
+      for (const tr of rows) {
+        const tds = tr.querySelectorAll('td');
+        const type = tds[1]?.textContent?.trim();
+        const category = tds[2]?.textContent?.trim() || 'general';
+        const amount = parseFloat((tds[3]?.textContent || '0').replace(/[^0-9.\-]/g, '')) || 0;
+        const sign = type === 'income' ? 1 : -1;
+        totals[category] = (totals[category] || 0) + sign * amount;
+      }
+      const labels = Object.keys(totals);
+      const data = labels.map(k => totals[k]);
+      const ctx = document.getElementById('chart');
+      if (!ctx) return;
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{ label: 'Profit by Category (Rs.)', data, backgroundColor: '#66bb6a' }]
+        },
+        options: { scales: { y: { beginAtZero: true } } }
+      });
+    })();
+  </script>
+{% endblock %}
+
+
+

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Market Rates - Smart AgriAssist{% endblock %}
+{% block content %}
+  <style>
+    button { background:#2e7d32; color:#fff; border:0; padding:8px 12px; border-radius:6px; cursor:pointer; }
+    select { padding:6px; }
+    .card { border:1px solid #e0e0e0; border-radius:8px; padding:12px; max-width:360px; }
+  </style>
+  <h2>Market Rates</h2>
+  <div>
+    <select id="crop">
+      <option>Wheat</option>
+      <option>Rice</option>
+      <option>Corn</option>
+      <option>Soybean</option>
+    </select>
+    <button onclick="loadRates()">Get Rates</button>
+  </div>
+  <div id="card" class="card" style="display:none;"></div>
+
+  <script>
+    async function loadRates() {
+      const crop = document.getElementById('crop').value;
+      const res = await fetch('/api/market?crop=' + encodeURIComponent(crop));
+      const data = await res.json();
+      const el = document.getElementById('card');
+      el.innerHTML = `<h3>${crop}</h3>
+        <div>Min: Rs. ${data.min}</div>
+        <div>Max: Rs. ${data.max}</div>
+        <div>Expected: Rs. ${data.expected}</div>`;
+      el.style.display = 'block';
+    }
+  </script>
+{% endblock %}
+
+
+

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Govt Schemes - Smart AgriAssist{% endblock %}
+{% block content %}
+  <style>
+    input { padding:6px; }
+    button { background:#2e7d32; color:#fff; border:0; padding:8px 12px; border-radius:6px; cursor:pointer; }
+    .item { border:1px solid #e0e0e0; border-radius:8px; padding:12px; margin:8px 0; }
+    a { color:#2e7d32; }
+  </style>
+  <h2>Government Schemes</h2>
+  <div>
+    <input id="state" placeholder="State (e.g., Maharashtra)"/>
+    <input id="district" placeholder="District (e.g., Pune)"/>
+    <button onclick="loadSchemes()">Search</button>
+  </div>
+  <div id="list"></div>
+
+  <script>
+    async function loadSchemes() {
+      const state = document.getElementById('state').value;
+      const district = document.getElementById('district').value;
+      const url = `/api/schemes?state=${encodeURIComponent(state)}&district=${encodeURIComponent(district)}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const list = document.getElementById('list');
+      list.innerHTML = '';
+      (data.schemes || []).forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `<h3>${s.title}</h3>
+          <div>${s.benefit}</div>
+          <div><a href="${s.link}" target="_blank">More</a></div>`;
+        list.appendChild(div);
+      });
+      if (!data.schemes || data.schemes.length === 0) {
+        list.textContent = 'No schemes found for the given location.';
+      }
+    }
+  </script>
+{% endblock %}
+
+
+

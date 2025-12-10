@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Smart AgriAssist{% endblock %}
+{% block content %}
+  <section class="grid" style="display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:18px;">
+    <div class="card">
+      <h3>Disease Detection</h3>
+      <p class="muted">Upload a leaf image to get a quick health check.</p>
+      <a href="{{ url_for('disease_page') }}">Open</a>
+    </div>
+    <div class="card">
+      <h3>Voice Translator</h3>
+      <p class="muted">Translate Marathi/Hindi speech or text to English with audio.</p>
+      <a href="{{ url_for('translator_page') }}">Open</a>
+    </div>
+    <div class="card">
+      <h3>Pesticide Scheduler</h3>
+      <p class="muted">See recommended timings for your crop.</p>
+      <a href="{{ url_for('scheduler_page') }}">Check</a>
+    </div>
+    <div class="card">
+      <h3>Govt Schemes</h3>
+      <p class="muted">Find schemes by state and district.</p>
+      <a href="{{ url_for('schemes_page') }}">Open</a>
+    </div>
+    <div class="card">
+      <h3>Market Rates</h3>
+      <p class="muted">View today’s mock rates and expected prices.</p>
+      <a href="{{ url_for('market_page') }}">Open</a>
+    </div>
+    <div class="card">
+      <h3>Weather</h3>
+      <p class="muted">Get current weather and alerts.</p>
+      <a href="{{ url_for('weather_page') }}">Open</a>
+    </div>
+  </section>
+{% endblock %}
+
+

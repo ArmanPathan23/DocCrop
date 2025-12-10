@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Translator - Smart AgriAssist{% endblock %}
+{% block content %}
+  <style>
+    a { color:#2e7d32; }
+    textarea { width:100%; min-height:120px; }
+    .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    button { background:#2e7d32; color:#fff; border:0; padding:8px 12px; border-radius:6px; cursor:pointer; }
+    input, select { padding:6px; }
+    audio { width:100%; margin-top:8px; }
+  </style>
+  <h2>Voice/Text Translator</h2>
+
+  <div>
+    <label>Source language:</label>
+    <select id="src">
+      <option value="auto" selected>Auto</option>
+      <option value="mr">Marathi</option>
+      <option value="hi">Hindi</option>
+      <option value="en">English</option>
+    </select>
+    <label>Target:</label>
+    <select id="dest">
+      <option value="en" selected>English</option>
+      <option value="mr">Marathi</option>
+      <option value="hi">Hindi</option>
+    </select>
+  </div>
+
+  <h3>Text</h3>
+  <textarea id="inputText" placeholder="Type something in Marathi/Hindi..."></textarea>
+  <div class="row">
+    <button onclick="doTranslate()">Translate</button>
+    <button onclick="doTTS()">Speak (TTS)</button>
+  </div>
+  <h4>Translated</h4>
+  <div id="translated" style="padding:8px; border:1px solid #e0e0e0; min-height:48px;"></div>
+  <audio id="ttsAudio" controls></audio>
+
+  <script>
+    async function doTranslate() {
+      const text = document.getElementById('inputText').value;
+      const src = document.getElementById('src').value;
+      const dest = document.getElementById('dest').value;
+      const res = await fetch('/api/translate', { method: 'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify({ text, src, dest }) });
+      const data = await res.json();
+      document.getElementById('translated').textContent = data.translated || '';
+    }
+    async function doTTS() {
+      const text = document.getElementById('translated').textContent || document.getElementById('inputText').value;
+      const lang = document.getElementById('dest').value;
+      const res = await fetch('/api/tts', { method: 'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify({ text, lang }) });
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = document.getElementById('ttsAudio');
+      audio.src = url;
+      audio.play();
+    }
+  </script>
+{% endblock %}
+
+
+

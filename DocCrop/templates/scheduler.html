@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Scheduler - Smart AgriAssist{% endblock %}
+{% block content %}
+  <style>
+    input, select { padding:6px; }
+    button { background:#2e7d32; color:#fff; border:0; padding:8px 12px; border-radius:6px; cursor:pointer; }
+    pre { background:#fafafa; border:1px solid #eee; padding:12px; }
+  </style>
+  <h2>Pesticide Scheduler</h2>
+  <div>
+    <label>Crop:</label>
+    <select id="crop">
+      <option>Wheat</option>
+      <option>Rice</option>
+      <option>Corn</option>
+      <option>Soybean</option>
+    </select>
+    <button onclick="loadSchedule()">Get Schedule</button>
+  </div>
+  <pre id="out"></pre>
+  <script>
+    async function loadSchedule() {
+      const crop = document.getElementById('crop').value;
+      const res = await fetch('/api/schedule?crop=' + encodeURIComponent(crop));
+      const data = await res.json();
+      document.getElementById('out').textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+{% endblock %}
+
+

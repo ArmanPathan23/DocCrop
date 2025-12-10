@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Weather - Smart AgriAssist{% endblock %}
+{% block content %}
+  <style>
+    button { background:#2e7d32; color:#fff; border:0; padding:8px 12px; border-radius:6px; cursor:pointer; }
+    input { padding:6px; }
+  </style>
+  <h2>Weather</h2>
+  <div>
+    <input id="city" placeholder="Enter city (e.g., Pune)"/>
+    <button onclick="loadWeather()">Get Weather</button>
+  </div>
+  <pre id="out"></pre>
+
+  <script>
+    async function loadWeather() {
+      const city = document.getElementById('city').value || 'Pune';
+      const res = await fetch('/api/weather?city=' + encodeURIComponent(city));
+      const data = await res.json();
+      document.getElementById('out').textContent = JSON.stringify(data, null, 2);
+      if (!data.error && data.temp_c && data.temp_c >= 35) {
+        alert('Heat alert! Consider irrigation and shade nets.');
+      }
+    }
+  </script>
+{% endblock %}
+
+
+
